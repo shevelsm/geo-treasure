@@ -5,8 +5,10 @@ from random import randrange
 RANK_RANGE = (0, 6)
 SOURCE_RANGE = (0, 3)
 
+
 # simple description for every marker
 DESCRIPTION = 'some html description here'
+
 
 # square area for marker generation in 4 digits, where xxxx = XX.XX0000 degree
 X_RANGE = (3850, 4100)

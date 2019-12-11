@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import folium
 import json
 import os
@@ -15,6 +15,7 @@ def markers_generator(range=10):
         markers_data = json.loads(file.read())
     return markers_data
 
+
 @app.route('/')
 def index():
     # in future get start_position as argument
@@ -23,7 +24,7 @@ def index():
     for marker in markers_generator():
         folium.Marker([marker['y'], marker['x']], popup=marker['description'],
                         tooltip='Click for more').add_to(folium_map)
-    return folium_map._repr_html_()
+    return render_template('index.html', map=folium_map._repr_html_())
 
 
 if __name__ == '__main__':
