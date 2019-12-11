@@ -1,2 +1,2 @@
 Flask==1.1.1
-folium==0.10.1
+Bootstrap-Flask==1.2.0

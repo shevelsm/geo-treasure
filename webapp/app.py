@@ -1,19 +1,13 @@
-from flask import Flask
-import folium
-
-
-START_POSITION = [44.4, 39.75]
+from flask_bootstrap import Bootstrap
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
-map = folium.Map(location=START_POSITION, zoom_start=9)
-folium.Marker(location=START_POSITION).add_to(map)
-
+bootstrap = Bootstrap(app)
 
 @app.route('/')
-def hello():
-        return map._repr_html_()
+def index():
+    return render_template("index.html")
 
-
-if __name__ == '__main__':
-        app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
