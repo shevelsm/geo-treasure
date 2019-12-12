@@ -30,7 +30,7 @@
     <main role="main" class="container-fluid">
       <section class="row">
         <article id="map" class="col-md-9 main-content">
-          {% block map %} {{ map|safe }} {% endblock %}
+          {% block map %} {{ folium_map|safe }} {% endblock %}
         </article>
         <article id="results" class="col-md-2 main-content">
           {% block results %} RESULTS {% endblock %}
