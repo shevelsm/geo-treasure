@@ -1,10 +1,13 @@
-from flask import Flask, render_template
-import folium
 import json
 import os
 
+import folium
+from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
+
 
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 
 
 # in future it will be algorithm
@@ -24,7 +27,7 @@ def index():
     for marker in markers_generator():
         folium.Marker([marker['y'], marker['x']], popup=marker['description'],
                         tooltip='Click for more').add_to(folium_map)
-    return render_template('index.html', map=folium_map._repr_html_())
+    return render_template('index.html', folium_map=folium_map._repr_html_())
 
 
 if __name__ == '__main__':

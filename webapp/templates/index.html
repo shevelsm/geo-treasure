@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+    {% endblock %}
+
+    <title>geo-treasure</title>
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-panels">
+      <a class="navbar-brand" href="/">GEO-TREASURE</a>
+      <section class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        </ul>
+      </section>
+    </nav>
+    <main role="main" class="container-fluid">
+      <section class="row">
+        <article id="map" class="col-md-9 main-content">
+          {% block map %} {{ folium_map|safe }} {% endblock %}
+        </article>
+        <article id="results" class="col-md-2 main-content">
+          {% block results %} RESULTS {% endblock %}
+        </article>
+      </section>
+    </main>
+    <footer>
+      <section class="footer text-center py-1 bg-panels" id="footerNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="link" href="">GitHub</a>
+          </li>
+        </ul>
+      </section>
+    </footer>
+    {% block scripts %} {{ bootstrap.load_js() }} {% endblock %}
+  </body>
+</html>
