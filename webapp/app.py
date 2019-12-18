@@ -4,10 +4,15 @@ import os
 import folium
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
+
+from webapp.model import db
 
 
 app = Flask(__name__)
+app.config.from_pyfile("config.py")
 bootstrap = Bootstrap(app)
+db.init_app(app)
 
 
 # in future it will be algorithm
