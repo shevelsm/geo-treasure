@@ -93,6 +93,3 @@ def get_geocaching_points():
             save_to_db(
                 id_point, title_point, SOURCE, url_point, lat_point, long_point, info
             )
-
-if __name__ == "__main__":
-    get_geocaching_points()
