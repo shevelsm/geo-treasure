@@ -7,8 +7,17 @@ from webapp.altravel_points import get_altravel_points
 
 
 parser = argparse.ArgumentParser(description="Choose parsers to start")
-parser.add_argument("-g", "--geo", default=False, help="run geocaching parser")
-parser.add_argument("-a", "--alter", default=False, help="run altertravel parser")
+parser.add_argument(
+    "-g", "--geo", default=False, nargs="?", const=True, help="run geocaching parser",
+)
+parser.add_argument(
+    "-a",
+    "--alter",
+    default=False,
+    nargs="?",
+    const=True,
+    help="run altertravel parser",
+)
 
 args = parser.parse_args()
 
