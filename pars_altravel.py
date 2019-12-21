@@ -1,7 +1,8 @@
 import requests
 import os
 from bs4 import BeautifulSoup
-from webapp.model import db, Point
+from webapp.app import db, app
+from webapp.model import Point
 
 
 def get_html(url):
@@ -27,6 +28,7 @@ def get_page_info(id):
     title = soup.find('h1', class_='view').text
     source = 'altertravel'
     info = soup.find('div', class_='col-sm-4').find('p').text.strip()
+    info = info.split('\n')[0]
     coords = soup.find('div', class_='points').find('span').text
     coords_list = coords.replace(',', '').split()
     lat = float(coords_list[0])
@@ -50,5 +52,6 @@ def save_info_to_bd(title, source, url, lat, long, info):
 if __name__ == '__main__':
     region_url = 'https://altertravel.ru/catalog/Краснодарский%20край'
     pages_id = get_pages_id(region_url)
-    for page_id in pages_id:
-        save_info_to_bd(*get_page_info(page_id))
+    with app.app_context():
+        for page_id in pages_id:
+            save_info_to_bd(*get_page_info(page_id))
