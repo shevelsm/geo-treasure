@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from webapp.app import app
-from webapp.geocahing_points import get_geocaching_points
+from webapp.geocaching_points import get_geocaching_points
 from webapp.altravel_points import get_altravel_points
 
 
