@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 
 
 class Point(db.Model):
-    db.__table__ = "point"
+    db.__tablename__ = "point"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     source = db.Column(db.String, nullable=False)
@@ -37,19 +37,19 @@ class Point(db.Model):
     lat = db.Column(db.Float, nullable=False)
     long = db.Column(db.Float, nullable=False)
     info = db.Column(db.Text, nullable=True)
-    clusters = db.relationship("Cluster", back_populates="point")
+    clusters = db.relationship("ClusterPoint", back_populates="point")
 
     def __repr__(self):
         return f"<Point {self.title} at {self.lat} {self.long}>"
 
 
 class Cluster(db.Model):
-    db.__table__ = "cluster"
+    db.__tablename____ = "cluster"
     id = db.Column(db.Integer, primary_key=True)
     lat = db.Column(db.Float, nullable=False)
     long = db.Column(db.Float, nullable=False)
     radius = db.Column(db.Float, nullable=False)
-    points = db.relationship("Point", back_populates="cluster")
+    points = db.relationship("ClusterPoint", back_populates="cluster")
 
     def __rep__(self):
         return f"<Cluster #{self.id}>"
@@ -59,5 +59,5 @@ class ClusterPoint(db.Model):
     db.__tablename__ = "cluster_point"
     cluster_id = db.Column(db.Integer, db.ForeignKey("cluster.id"), primary_key=True)
     point_id = db.Column(db.Integer, db.ForeignKey("point.id"), primary_key=True)
-    cluster = db.relationship("Cluster", back_populates="cluster")
-    point = db.relationship("Point", back_populates="point")
+    cluster = db.relationship("Cluster", back_populates="points")
+    point = db.relationship("Point", back_populates="clusters")

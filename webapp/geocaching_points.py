@@ -88,7 +88,7 @@ def get_geocaching_points():
             if info_text:
                 info = ""
                 for paragraph in info_text:
-                    info += paragraph.text
+                    info += paragraph.text.strip()
 
             save_to_db(
                 id_point, title_point, SOURCE, url_point, lat_point, long_point, info
