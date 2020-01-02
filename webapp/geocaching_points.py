@@ -12,13 +12,12 @@ logging.basicConfig(level=logging.DEBUG, filename="geocaching_parsing.log")
 
 
 def save_to_db(
-    id_point, title_point, source_point, url_point, lat_point, long_point, info_point
+    title_point, source_point, url_point, lat_point, long_point, info_point
 ):
     point_exist = Point.query.filter(Point.url == url_point).count()
     logging.debug(f"count this point {point_exist}")
     if not point_exist:
         new_point = Point(
-            id=id_point,
             title=title_point,
             source=source_point,
             url=url_point,
@@ -86,10 +85,10 @@ def get_geocaching_points():
 
             info_text = soup.find("div", class_="cdata").find_all("p")
             if info_text:
-                info = ""
+                info_point = ""
                 for paragraph in info_text:
-                    info += paragraph.text.strip()
+                    info_point += paragraph.text.strip()
 
             save_to_db(
-                id_point, title_point, SOURCE, url_point, lat_point, long_point, info
+                title_point, SOURCE, url_point, lat_point, long_point, info_point
             )
