@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+
 from webapp.app import db, app
 from webapp.model import Point
 
@@ -21,8 +22,8 @@ def get_pages_id(region_url):
     return id_list
 
 
-def get_page_info(id):
-    url = 'https://altertravel.ru/view.php?id=' + id
+def get_page_info(page_id):
+    url = f'https://altertravel.ru/view.php?id={page_id}'
     soup = get_soup(get_html(url))
     title = soup.find('h1', class_='view').text
     source = 'altertravel'
