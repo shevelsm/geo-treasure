@@ -10,6 +10,7 @@
 │   ├── model.py
 │   ├── altravel_points.py
 │   ├── geocaching_points.py
+│   ├── autotravel_points.py
 │   ├── templates/
 │   │   └── index.html
 │   └── static/
