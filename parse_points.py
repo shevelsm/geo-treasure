@@ -30,7 +30,7 @@ with app.app_context():
     if args.auto:
         get_autotravel_points()
 
-    if not len(sys.argv) > 1:
+    if len(sys.argv) <= 1:
         get_geocaching_points()
         get_altravel_points()
-        get_autotravel_points
+        get_autotravel_points()
