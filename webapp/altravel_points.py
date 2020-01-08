@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.app import db, app
+from webapp import db 
 from webapp.model import Point
 
 
@@ -52,6 +52,5 @@ def save_info_to_bd(title, source, url, lat, long, info):
 def get_altravel_points():
     region_url = 'https://altertravel.ru/catalog/Краснодарский%20край'
     pages_id = get_pages_id(region_url)
-    with app.app_context():
-        for page_id in pages_id:
-            save_info_to_bd(*get_page_info(page_id))
+    for page_id in pages_id:
+        save_info_to_bd(*get_page_info(page_id))
