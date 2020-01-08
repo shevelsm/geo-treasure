@@ -8,9 +8,6 @@ from bs4 import BeautifulSoup
 from webapp.model import db, Point
 
 
-logging.basicConfig(level=logging.DEBUG, filename="autotravel_parsing.log")
-
-
 def save_to_db(title_point, source_point, url_point, lat_point, long_point, info_point):
     point_exist = Point.query.filter(Point.url == url_point).count()
     logging.debug(f"count this point {point_exist}")

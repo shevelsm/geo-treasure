@@ -8,12 +8,7 @@ from bs4 import BeautifulSoup
 from webapp.model import db, Point
 
 
-logging.basicConfig(level=logging.DEBUG, filename="geocaching_parsing.log")
-
-
-def save_to_db(
-    title_point, source_point, url_point, lat_point, long_point, info_point
-):
+def save_to_db(title_point, source_point, url_point, lat_point, long_point, info_point):
     point_exist = Point.query.filter(Point.url == url_point).count()
     logging.debug(f"count this point {point_exist}")
     if not point_exist:
@@ -27,6 +22,7 @@ def save_to_db(
         )
         db.session.add(new_point)
         db.session.commit()
+
 
 def get_geocaching_points():
     zones = {
@@ -61,7 +57,9 @@ def get_geocaching_points():
         params = {"pn": SEARCH_PAGE}
         response = ses.post(URL, data=form_data, params=params)
         soup = BeautifulSoup(response.text, "html.parser")
-        points_table = soup.find("table", class_="pages").find_all("tr", {"valign": "top"})
+        points_table = soup.find("table", class_="pages").find_all(
+            "tr", {"valign": "top"}
+        )
 
         for point in points_table:
             id_point = point.find("input")["value"]
