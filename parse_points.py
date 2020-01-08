@@ -7,18 +7,15 @@ from webapp.altravel_points import get_altravel_points
 from webapp.autotravel_points import get_autotravel_points
 from webapp.geocaching_points import get_geocaching_points
 
+
+logging.basicConfig(level=logging.INFO, filename="points_parsing.log")
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 formatter = logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%d-%m-%Y %H:%M:%S"
 )
-fh = logging.FileHandler("points_parsing.log")
-fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-fh.setFormatter(formatter)
 ch.setFormatter(formatter)
-logger.addHandler(fh)
 logger.addHandler(ch)
 
 parser = argparse.ArgumentParser(description="Choose parsers to start")
