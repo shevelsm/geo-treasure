@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-from webapp import db 
-from webapp.model import Point
+# from webapp import db 
+# from webapp.model import Point
 
 
 def get_html(url):
@@ -54,3 +54,29 @@ def get_altravel_points():
     pages_id = get_pages_id(region_url)
     for page_id in pages_id:
         save_info_to_bd(*get_page_info(page_id))
+
+
+if __name__ == '__main__':
+    region_url = 'https://altertravel.ru/catalog_sub.php'
+    page_number = 0
+    id_list = []
+    while True:
+        params = {'p': page_number, 'tag': 'Краснодарский край'}
+        html = requests.post(url=region_url, params=params)
+        soup = get_soup(html.text)
+
+        if soup.find('div', class_='roww'):
+            print('find end!')
+            break
+
+        pages_list = soup.findAll('div', class_='info_title')
+        for page in pages_list:
+            # print(page)
+            id_list.append(page.find('a')['href'][13:])
+
+        page_number += 1
+        # user_input = input('continue?')
+        # if user_input == 'n':
+        #     break
+
+    print(len(id_list))
