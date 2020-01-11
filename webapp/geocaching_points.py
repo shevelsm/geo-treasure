@@ -79,7 +79,7 @@ def get_geocaching_points():
             coords = re.sub("[N,S,E,W,°,']", "", coords.text).strip().split()
             lat_point = float(coords[0]) + float(coords[1]) / 60
             long_point = float(coords[2]) + float(coords[3]) / 60
-            logging.debug(f"Coords: lan={lat_point} long={long_point}")
+            logging.debug(f"Coords: lat={lat_point} long={long_point}")
 
             info_text = soup.find("div", class_="cdata").find_all("p")
             if info_text:

@@ -26,13 +26,7 @@ def create_app():
         # in future get start_position as argument
         start_position = [44.4, 39.75]
         folium_map = folium.Map(location=start_position, zoom_start=9)
-        # for marker in markers_generator():
-        #     folium.Marker(
-        #         [marker['y'], marker['x']],
-        #         popup=marker['description'],
-        #         tooltip='Click for more',
-        #     ).add_to(folium_map)
-        folium.Marker(start_position, popup="CENTER").add_to(folium_map)
+        olium.Marker(start_position, popup="CENTER").add_to(folium_map)
         with app.app_context():
                 print(Point.__table__)
                 points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
