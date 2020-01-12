@@ -33,18 +33,19 @@ def get_autotravel_points():
         "Краснодарский край": 28,
         "Республика Адыгея": 69,
     }
-    POINT_TYPES = [f'{n:03}' for n in range(63)]
+    NUMBER_OF_POINTS_TYPES_IN_SEARCH = 63
+    POINTS_TYPES = [f"{n:03}" for n in range(NUMBER_OF_POINTS_TYPES_IN_SEARCH)]
 
     ses = requests.Session()
     params = {
         "area[]": AREAS.values(),
-        "typex[]": POINT_TYPES,
+        "typex[]": POINTS_TYPES,
         "mrate": 0.01,
         "diff": 0,
         "tid": 0,
         "helptid": 0,
         "mark": 1,
-        "ksubmit": "Найти"
+        "ksubmit": "Найти",
     }
     response = ses.get(URL_SEARCH, params=params)
     soup = BeautifulSoup(response.text, "html.parser")
