@@ -54,7 +54,7 @@ KMS_PER_RADIAN = 6371.0088  # [km]
 radius_list = [
     radius for radius in range(MIN_RADIUS, MAX_RADIUS + RADIUS_STEP, RADIUS_STEP)
 ]
-logger.debug("List of radiuss for clusters {}".format(radius_list))
+logger.debug("List of radius for clusters {}".format(radius_list))
 
 app = create_app()
 with app.app_context():
