@@ -1,4 +1,5 @@
 import logging
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -71,7 +72,7 @@ def save_info_to_bd(title, source, url, lat, long, info):
 def get_altravel_points():
     region_names = ['Краснодарский край',
                     'Республика Адыгея',
-                   ]
+    ]
     pages_id = []
     for region in region_names:
         pages_id += get_pages_id(region)
