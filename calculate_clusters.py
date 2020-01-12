@@ -27,9 +27,9 @@ logger.addHandler(ch)
 
 def save_cluster_to_db(lat_cluster, long_cluster, radius_cluster, points_cluster):
     cluster_exist = Cluster.query.filter(
-        Cluster.lat == lat_cluster
-        and Cluster.long == long_cluster
-        and Cluster.radius == radius_cluster
+        Cluster.lat == lat_cluster,
+        Cluster.long == long_cluster,
+        Cluster.radius == radius_cluster
     ).count()
     logger.debug(f"count this cluster {cluster_exist}")
     if not cluster_exist:
