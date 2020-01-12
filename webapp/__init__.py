@@ -8,6 +8,9 @@ from flask_bootstrap import Bootstrap
 from webapp.model import Cluster, db, Point
 
 
+MAP_START_POSITION = [44.4, 39.75]
+
+
 def markers_generator():
     """ range - searching radius for places """
     path_to_file = os.path.join("webapp", "data", "ready50dots.json")
@@ -22,13 +25,10 @@ def create_app():
     db.init_app(app)
     Bootstrap(app)
 
-    start_position = [44.4, 39.75]
-
     @app.route("/")
     def index():
         # in future get start_position as argument
-        folium_map = folium.Map(location=start_position, zoom_start=9)
-        folium.Marker(start_position, popup="CENTER").add_to(folium_map)
+        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
         with app.app_context():
             print(Point.__table__)
             points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
@@ -38,8 +38,7 @@ def create_app():
 
     @app.route("/dev")
     def dev():
-        folium_map = folium.Map(location=start_position, zoom_start=9)
-        folium.Marker(start_position, popup="CENTER").add_to(folium_map)
+        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
         with app.app_context():
             cluster_list = Cluster.query.filter(Cluster.radius == 10.0)
             for cluster in cluster_list:

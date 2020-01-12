@@ -76,7 +76,7 @@ def get_geocaching_points():
             soup = BeautifulSoup(response.text, "html.parser")
 
             coords = soup.find("th", {"id": "cache_coords"})
-            coords = re.sub("[N,S,E,W,°,']", "", coords.text).strip().split()
+            coords = re.sub("[NSEW°']", "", coords.text).strip().split()
             lat_point = float(coords[0]) + float(coords[1]) / 60
             long_point = float(coords[2]) + float(coords[3]) / 60
             logging.debug(f"Coords: lat={lat_point} long={long_point}")
@@ -86,6 +86,8 @@ def get_geocaching_points():
                 info_point = ""
                 for paragraph in info_text:
                     info_point += paragraph.text.strip()
+            else:
+                info_point = "Информация отсутствует"
 
             save_to_db(
                 title_point, SOURCE, url_point, lat_point, long_point, info_point
