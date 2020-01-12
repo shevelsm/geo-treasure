@@ -60,7 +60,7 @@ def get_autotravel_points():
         try:
             lat_point = float(coords[0]) + float(coords[1]) / 60
             long_point = float(coords[2]) + float(coords[3]) / 60
-            logging.debug(f"Coords: lan={lat_point} long={long_point}")
+            logging.debug(f"Coords: lat={lat_point} long={long_point}")
         except ValueError:
             continue
 
