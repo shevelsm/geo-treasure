@@ -27,9 +27,9 @@ logger.addHandler(ch)
 
 def save_cluster_to_db(lat_cluster, long_cluster, radius_cluster, points_cluster):
     cluster_exist = Cluster.query.filter(
-        Cluster.lat == lat_cluster
-        and Cluster.long == long_cluster
-        and Cluster.radius == radius_cluster
+        Cluster.lat == lat_cluster,
+        Cluster.long == long_cluster,
+        Cluster.radius == radius_cluster,
     ).count()
     logger.debug(f"count this cluster {cluster_exist}")
     if not cluster_exist:
@@ -54,12 +54,12 @@ KMS_PER_RADIAN = 6371.0088  # [km]
 radius_list = [
     radius for radius in range(MIN_RADIUS, MAX_RADIUS + RADIUS_STEP, RADIUS_STEP)
 ]
-logger.debug("List of radiuss for clusters {}".format(radius_list))
+logger.debug("List of radius for clusters {}".format(radius_list))
 
 app = create_app()
 with app.app_context():
     con = db.session.bind
-    all_points_sql = Point.query.__str__()
+    all_points_sql = str(Point.query)
     points_df = pd.read_sql(all_points_sql, con)
     logger.debug(points_df.head())
 
@@ -74,9 +74,9 @@ for radius in radius_list:
     ).fit(np.radians(coords))
     cluster_labels = db_scan.labels_
 
-    all_lables = set(cluster_labels)
-    all_lables.discard(-1)
-    num_clusters = len(all_lables)
+    all_labels = set(cluster_labels)
+    all_labels.discard(-1)
+    num_clusters = len(all_labels)
 
     logger.info(
         "Clustered {:,} points down to {:,} clusters".format(

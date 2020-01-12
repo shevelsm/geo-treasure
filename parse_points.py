@@ -40,17 +40,17 @@ app = create_app()
 with app.app_context():
     if args.geo:
         logger.info("Parsing GEOCACHING only...")
-        logger.info("GEOCACHING paser has been started!")
+        logger.info("GEOCACHING parser has been started!")
         get_geocaching_points()
 
     if args.alter:
         logger.info("Parse ALTERTRAVEL only...")
-        logger.info("ALTERTRAVEL paser has been started!")
+        logger.info("ALTERTRAVEL parser has been started!")
         get_altravel_points()
 
     if args.auto:
         logger.info("Parsing AUTOTRAVEL only...")
-        logger.info("AUTOTRAVEL paser has been started!")
+        logger.info("AUTOTRAVEL parser has been started!")
         get_autotravel_points()
 
     if len(sys.argv) <= 1:
