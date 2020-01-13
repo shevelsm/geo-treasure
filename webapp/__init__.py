@@ -43,7 +43,8 @@ def create_app():
             cluster_list = Cluster.query.filter(Cluster.radius == 10.0)
             for cluster in cluster_list:
                 folium.Marker(
-                    [cluster.lat, cluster.long], popup=cluster.id, icon=None
+                    [cluster.lat, cluster.long], popup=cluster.id,
+                    icon=folium.Icon(color='red', icon='gift')
                 ).add_to(folium_map)
         return render_template("index.html", folium_map=folium_map._repr_html_())
 
