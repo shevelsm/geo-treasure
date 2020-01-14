@@ -6,22 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from webapp.model import db, Point
-
-
-def save_to_db(title_point, source_point, url_point, lat_point, long_point, info_point):
-    point_exist = Point.query.filter(Point.url == url_point).count()
-    logging.debug(f"count this point {point_exist}")
-    if not point_exist:
-        new_point = Point(
-            title=title_point,
-            source=source_point,
-            url=url_point,
-            lat=lat_point,
-            long=long_point,
-            info=info_point,
-        )
-        db.session.add(new_point)
-        db.session.commit()
+from webapp.utils import save_point_to_db
 
 
 def get_geocaching_points():
@@ -89,6 +74,6 @@ def get_geocaching_points():
             else:
                 info_point = "Информация отсутствует"
 
-            save_to_db(
+            save_point_to_db(
                 title_point, SOURCE, url_point, lat_point, long_point, info_point
             )

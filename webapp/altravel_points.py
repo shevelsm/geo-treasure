@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from webapp.model import db, Point
+from webapp.utils import save_point_to_db
 
 
 def get_html(url):
@@ -55,20 +56,6 @@ def get_page_info(page_id):
     return title, source, url, lat, long, info
 
 
-def save_info_to_bd(title, source, url, lat, long, info):
-    point_exists = Point.query.filter(Point.url == url).count()
-    logging.debug(f"count this point {point_exists}")
-    if not point_exists:
-        point = Point(title=title, 
-                      source=source,
-                      url=url,
-                      lat=lat,
-                      long=long,
-                      info=info)
-        db.session.add(point)
-        db.session.commit()
-
-
 def get_altravel_points():
     region_names = ['Краснодарский край',
                     'Республика Адыгея',
@@ -77,4 +64,4 @@ def get_altravel_points():
     for region in region_names:
         pages_id += get_pages_id(region)
     for page_id in pages_id:
-        save_info_to_bd(*get_page_info(page_id))
+        save_point_to_db(*get_page_info(page_id))
