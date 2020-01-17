@@ -8,7 +8,7 @@ from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 
-from webapp.model import Cluster, db, Point
+from webapp.model import Cluster, ClusterPoint, db, Point
 
 
 logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
@@ -26,12 +26,10 @@ def markers_generator():
 def add_on_click_handler_to_marker(folium_map, marker, cluster_id):
     my_js = """
             {0}.on('click', function(e) {{
-            console.log(e.latlng);
-            console.log({1})
+                parent.postMessage({1}, 'http://localhost:5000');
             }});
             """.format(
-        marker.get_name(),
-        cluster_id
+        marker.get_name(), cluster_id
     )
     e = Element(my_js)
     html = folium_map.get_root()
@@ -62,11 +60,21 @@ def create_app():
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
         with app.app_context():
             cluster_list = Cluster.query.filter(Cluster.radius == 10.0)
+            logging.debug(
+                "The number of clusters from the query = {}".format(
+                    cluster_list.count()
+                )
+            )
             for cluster in cluster_list:
                 marker = folium.Marker(
                     [cluster.lat, cluster.long], popup=cluster.id, icon=None
                 ).add_to(folium_map)
                 add_on_click_handler_to_marker(folium_map, marker, cluster.id)
         return render_template("index.html", folium_map=folium_map._repr_html_())
+
+    @app.route("/devajax/<int:cluster_id>")
+    def devajax(cluster_id):
+        points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
+        return render_template("cluster_points.html", points=points)
 
     return app

@@ -1,0 +1,15 @@
+<ul class="list-group">
+  {% for point in points %}
+  <a
+    href="{{ point.url }}"
+    class="list-group-item list-group-item-action"
+    target="_blank"
+  >
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1 pr-3">{{ point.title }}</h5>
+      <small>{{ point.source }}</small>
+    </div>
+    <small>At {{ "{:.5f}, {:.5f}".format(point.lat, point.long) }} </small>
+  </a>
+  {% endfor %}
+</ul>

@@ -1,0 +1,14 @@
+body {
+    background: #f1f1f1;
+    color: #333333;
+    margin-top: 0.5rem;
+}
+  
+.bg-panels {
+    background-color: indigo;
+}
+  
+.main-content {
+    height: 800px;
+    margin: 10px 5px;
+}
