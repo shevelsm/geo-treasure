@@ -4,6 +4,7 @@ import os
 import folium
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
+from flask_migrate import Migrate
 
 from webapp.model import Cluster, db, Point
 
@@ -24,6 +25,7 @@ def create_app():
     app.config.from_pyfile("config.py")
     db.init_app(app)
     Bootstrap(app)
+    migrate = Migrate(app, db)
 
     @app.route("/")
     def index():
