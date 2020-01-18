@@ -16,7 +16,7 @@ def get_geocaching_points():
     }
 
     URL = "https://geocaching.su/"
-    SOURCE = "geocashing"
+    SOURCE = "geocaching"
     POINT_PAGE = "101"
     SEARCH_PAGE = "102"
     MIN_RATING = 4

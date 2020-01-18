@@ -1,6 +1,9 @@
+import json
 import logging
+import os
 
 from folium import Icon, Popup, Html
+from branca.element import Element
 
 from webapp.model import db, Point, ClusterPoint
 
@@ -58,3 +61,24 @@ def create_popup_for_marker(cluster_id):
                 f'geocaching - {geo}', script=True)
     
     return Popup(html=text, max_width=400)
+
+def add_on_click_handler_to_marker(folium_map, marker, cluster_id):
+    my_js = """
+            {0}.on('click', function(e) {{
+                parent.postMessage({1}, 'http://localhost:5000');
+            }});
+            """.format(
+        marker.get_name(), cluster_id
+    )
+    e = Element(my_js)
+    html = folium_map.get_root()
+    html.script.get_root().render()
+    html.script._children[e.get_name()] = e
+
+
+def markers_generator():
+    """ range - searching radius for places """
+    path_to_file = os.path.join("webapp", "data", "ready50dots.json")
+    with open(path_to_file, "r", encoding="utf-8") as file:
+        markers_data = json.loads(file.read())
+    return markers_data

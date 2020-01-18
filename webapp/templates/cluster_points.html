@@ -9,7 +9,9 @@
       <h5 class="mb-1 pr-3">{{ point.title }}</h5>
       <small>{{ point.source }}</small>
     </div>
-    <small>At {{ "{:.5f}, {:.5f}".format(point.lat, point.long) }} </small>
+    <small
+      >Координаты {{ "{:.5f}, {:.5f}".format(point.lat, point.long) }}
+    </small>
   </a>
   {% endfor %}
 </ul>
