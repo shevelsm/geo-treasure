@@ -1,6 +1,8 @@
 import json
+import logging
 import os
 
+from branca.element import Element
 import folium
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
@@ -10,6 +12,7 @@ from webapp.model import Cluster, db, Point
 from webapp.utils import create_icon_for_marker, create_popup_for_marker
 
 
+logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
 MAP_START_POSITION = [44.4, 39.75]
 
 
@@ -19,6 +22,20 @@ def markers_generator():
     with open(path_to_file, "r", encoding="utf-8") as file:
         markers_data = json.loads(file.read())
     return markers_data
+
+
+def add_on_click_handler_to_marker(folium_map, marker, cluster_id):
+    my_js = """
+            {0}.on('click', function(e) {{
+                parent.postMessage({1}, 'http://localhost:5000');
+            }});
+            """.format(
+        marker.get_name(), cluster_id
+    )
+    e = Element(my_js)
+    html = folium_map.get_root()
+    html.script.get_root().render()
+    html.script._children[e.get_name()] = e
 
 
 def create_app():
@@ -44,12 +61,22 @@ def create_app():
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
         with app.app_context():
             cluster_list = Cluster.query.filter(Cluster.radius == 2.0)
+            logging.debug(
+                "The number of clusters from the query = {}".format(
+                    cluster_list.count()
+                )            
             for cluster in cluster_list:
-                folium.Marker(
+                marker = folium.Marker(
                     [cluster.lat, cluster.long],
                     popup=create_popup_for_marker(cluster.id),
                     icon=create_icon_for_marker(cluster.id)
                 ).add_to(folium_map)
+                add_on_click_handler_to_marker(folium_map, marker, cluster.id)
         return render_template("index.html", folium_map=folium_map._repr_html_())
+
+    @app.route("/devajax/<int:cluster_id>")
+    def devajax(cluster_id):
+        points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
+        return render_template("cluster_points.html", points=points)
 
     return app
