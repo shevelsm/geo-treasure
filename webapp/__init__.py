@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 
 from webapp.model import Cluster, db, Point
+from webapp.utils import create_icon_for_marker, create_popup_for_marker
 
 
 MAP_START_POSITION = [44.4, 39.75]
@@ -42,10 +43,12 @@ def create_app():
     def dev():
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
         with app.app_context():
-            cluster_list = Cluster.query.filter(Cluster.radius == 10.0)
+            cluster_list = Cluster.query.filter(Cluster.radius == 2.0)
             for cluster in cluster_list:
                 folium.Marker(
-                    [cluster.lat, cluster.long], popup=cluster.id, icon=None
+                    [cluster.lat, cluster.long],
+                    popup=create_popup_for_marker(cluster.id),
+                    icon=create_icon_for_marker(cluster.id)
                 ).add_to(folium_map)
         return render_template("index.html", folium_map=folium_map._repr_html_())
 
