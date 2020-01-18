@@ -10,4 +10,5 @@ body {
 
 .main-content {
   height: 800px;
+  overflow-y: auto;
 }
