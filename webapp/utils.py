@@ -44,7 +44,7 @@ def create_icon_for_marker(cluster_id):
 
 
 def create_popup_for_marker(cluster_id):
-    sources = {'altertravel': 0, 'autotravel': 0, 'geocashing': 0}
+    sources = {'altertravel': 0, 'autotravel': 0, 'geocaching': 0}
 
     points = ClusterPoint.query.filter(ClusterPoint.cluster_id == cluster_id)
     for point in points:
@@ -53,7 +53,7 @@ def create_popup_for_marker(cluster_id):
 
     alter, auto, geo = (sources['altertravel'],
                       sources['autotravel'],
-                      sources['geocashing'],
+                      sources['geocaching'],
     )
 
     text = Html(f'altertravel - {alter}<br>'

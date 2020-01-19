@@ -1,73 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {% block head %}
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    {% block styles %} {{ bootstrap.load_css() }}
-    <link rel="stylesheet" type="text/css" href="static/style.css" />
-    {% endblock %}
-
-    <title>geo-treasure</title>
-    {% endblock %}
-  </head>
-
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-panels">
-      <a class="navbar-brand" href="/">GEO-TREASURE</a>
-      <section class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Главная</a>
-          </li>
-        </ul>
-      </section>
-    </nav>
-    <main role="main" class="container-fluid">
-      <section class="row">
-        <article id="map" class="col-md-9 main-content">
-          {% block map %} {{ folium_map|safe }} {% endblock %}
-        </article>
-        <section class="col-md-3 main-content">
-          <h2>Список интересных мест</h2>
-          <article id="results">
-            <span class="badge badge-info">
-              Выбери интересующий кластер на карте
-            </span>
-            <!-- Points list for the clicked cluster is inserted here -->
-          </article>
-        </section>
-      </section>
-    </main>
-    <footer>
-      <section class="footer text-center py-1 bg-panels" id="footerNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="https://github.com/Shevelsm/geo-treasure" href=""
-              >GitHub</a
-            >
-          </li>
-        </ul>
-      </section>
-    </footer>
-    {% block scripts %} {{ bootstrap.load_js() }} {% endblock %}
-    <!-- EventListener when message is recieved from Marker on click event -->
-    <script>
-      $(document).ready(function() {
-        console.log("Page ready!");
-        window.addEventListener("message", function(e) {
-          $.ajax({
-            url: `/devajax/${e.data}`
-          }).done(function(data) {
-            $("#results").html(data);
-          });
-        });
+{% extends 'base.html' %} {% block content %}
+<section class="row">
+  <article id="map" class="col-md-9 main-content">
+    {% block map %} {{ folium_map|safe }} {% endblock %}
+  </article>
+  <section class="col-md-3 main-content">
+    <h2>Список интересных мест</h2>
+    <article id="results">
+      <span class="badge badge-info">
+        Выбери интересующий кластер на карте
+      </span>
+      <!-- Points list for the clicked cluster is inserted here -->
+    </article>
+  </section>
+</section>
+{% endblock %} {% block scripts %}
+<!-- EventListener when message is recieved from Marker on click event -->
+<script>
+  $(document).ready(function() {
+    console.log("Page ready!");
+    window.addEventListener("message", function(e) {
+      $.ajax({
+        url: `/devajax/${e.data}`
+      }).done(function(data) {
+        $("#results").html(data);
       });
-    </script>
-  </body>
-</html>
+    });
+  });
+</script>
+{% endblock %}

@@ -13,7 +13,7 @@ from webapp.utils import (
 )
 
 
-logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 MAP_START_POSITION = [44.4, 38.75]
 
 
@@ -27,7 +27,7 @@ def create_app():
     @app.route("/")
     def index():
         # in future get start_position as argument
-        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
+        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
             print(Point.__table__)
             points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
