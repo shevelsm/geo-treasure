@@ -65,3 +65,11 @@ body {
     visibility: hidden;
   }
 }
+
+.login {
+  font-size: medium;
+}
+
+form div {
+  font-size: medium;
+}

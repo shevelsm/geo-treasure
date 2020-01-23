@@ -16,13 +16,7 @@
     {% endif %}
   </head>
   <body>
-    {% include 'menu.html' %} {% with messages = get_flashed_messages() %} {% if
-    messages %}
-    <div class="alert alert-warning" role="alert">
-      {% for message in messages %} {{ message }}<br />
-      {% endfor %}
-    </div>
-    {% endif %}{% endwith %}
+    {% include 'menu.html' %}
     <main role="main" class="main-content">
       {% block content %}{% endblock %}
     </main>

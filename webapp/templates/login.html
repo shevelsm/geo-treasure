@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %}
-<div class="col-4 m-4">
+<section class="col-4 m-4 login">
   {% with messages = get_flashed_messages() %} {% if messages %}
   <div class="alert alert-warning" role="alert">
     {% for message in messages %} {{ message }}<br />
@@ -20,5 +20,5 @@
     </div>
     {{ form.submit() }}
   </form>
-</div>
+</section>
 {% endblock %}
