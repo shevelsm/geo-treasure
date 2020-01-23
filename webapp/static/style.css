@@ -46,7 +46,8 @@ body {
 }
 
 .footer {
-  height: 5%;
+  height: 10%;
+  padding: 9px;
 }
 
 @media screen and (max-width: 1342px) {
@@ -55,7 +56,12 @@ body {
     width: 100%;
   }
   .result-content {
-    font-size: medium;
+    margin: 10px;
+    height: 510px;
+    width: 100%;
     display: block;
+  }
+  .footer {
+    visibility: hidden;
   }
 }
