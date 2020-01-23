@@ -40,7 +40,7 @@ def get_autotravel_points():
         href = point.find("a")["href"]
         url_point = f"{URL_BASE}{href}"
         data = point.find("td").text.split("\n")
-        title_point = data[1].split("(")[0]
+        title_point = data[1].split("(")[0].strip()
         logging.debug(f"New point title: {title_point}")
         coords = re.sub("[N,E]", "", data[2]).split()
         try:
