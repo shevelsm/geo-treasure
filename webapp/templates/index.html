@@ -1,18 +1,16 @@
 {% extends 'base.html' %} {% block content %}
-<section class="row">
-  <article id="map" class="col-md-9 main-content">
-    {% block map %} {{ folium_map|safe }} {% endblock %}
-  </article>
-  <section class="col-md-3 main-content">
-    <h2>Список интересных мест</h2>
-    <article id="results">
-      <span class="badge badge-info">
-        Выбери интересующий кластер на карте
-      </span>
-      <!-- Points list for the clicked cluster is inserted here -->
-    </article>
+<article id="map" class="map-content">
+  {% block map %} {{ folium_map|safe }} {% endblock %}
+</article>
+<article class="result-content">
+  <h2>Список интересных мест</h2>
+  <section id="results" class="result-list">
+    <p class="alert alert-info">
+      Выбери интересующий кластер на карте
+    </p>
+    <!-- Points list for the clicked cluster is inserted here -->
   </section>
-</section>
+</article>
 {% endblock %} {% block scripts %}
 <!-- EventListener when message is recieved from Marker on click event -->
 <script>

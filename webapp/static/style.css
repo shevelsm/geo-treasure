@@ -1,14 +1,61 @@
+html,
 body {
   background: #f1f1f1;
   color: #333333;
-  margin-top: 0.5rem;
+  height: 100%;
 }
 
 .bg-panels {
   background-color: indigo;
 }
-
 .main-content {
-  height: 800px;
+  font-size: 0;
+  height: 90%;
+}
+.map-content {
+  display: inline-block;
+  width: 70%;
+  height: 100%;
+}
+
+.map-content > div {
+  height: 100%;
+}
+
+.map-content > div > div {
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+.result-content {
+  display: inline-block;
+  width: 30%;
+  height: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
   overflow-y: auto;
+  font-size: medium;
+}
+
+.result-content > h2 {
+  text-align: center;
+}
+
+.result-list > p {
+  text-align: center;
+}
+
+.footer {
+  height: 5%;
+}
+
+@media screen and (max-width: 1342px) {
+  .map-content {
+    display: block;
+    width: 100%;
+  }
+  .result-content {
+    font-size: medium;
+    display: block;
+  }
 }
