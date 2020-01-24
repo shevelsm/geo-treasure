@@ -12,7 +12,7 @@ from flask_login import (
 )
 from flask_migrate import Migrate
 
-from webapp.forms import LoginForm
+from webapp.forms import LoginForm, RegistrationForm
 from webapp.model import Cluster, db, Point, User
 from webapp.utils import (
     add_on_click_handler_to_marker,
@@ -34,6 +34,10 @@ def create_app():
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_views = "login"
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
 
     @app.route("/")
     def index():
@@ -81,7 +85,9 @@ def create_app():
     def process_login():
         form = LoginForm()
         if form.validate_on_submit():
+            print("data:", form.username.data)
             user = User.query.filter(User.username == form.username.data).first()
+            print("response", user)
             if user and user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
                 flash("You've been logged in!")
@@ -94,5 +100,37 @@ def create_app():
         logout_user()
         flash("You've been logged out successfully!")
         return redirect(url_for("index"))
+
+    @app.route("/register")
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for("index"))
+        title = "Registration"
+        registration_form = RegistrationForm()
+        return render_template(
+            "registration.html", page_title=title, form=registration_form
+        )
+
+    @app.route("/process_reg", methods=["POST"])
+    def process_reg():
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            new_user = User(
+                username=form.username.data, email=form.email.data, role="user"
+            )
+            new_user.set_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("login"))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(
+                        "The error in the field '{}': - {}".format(
+                            getattr(form, field).label.text, error
+                        )
+                    )
+        flash("Please, correct errors in the form!")
+        return redirect(url_for("user.register"))
 
     return app
