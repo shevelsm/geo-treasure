@@ -7,4 +7,28 @@
       </li>
     </ul>
   </section>
+  <section class="navbar-nav ml-auto" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <span class="nav-link">Привет, {{ current_user.username }}!</span>
+      </li>
+      {% if current_user.is_admin %}
+      <li class="nav-item">
+        <a class="nav-link" href="#">Администрирование</a>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('logout') }}">Выйти</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('register') }}">Регистрация</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login') }}">Войти</a>
+      </li>
+      {% endif %}
+    </ul>
+  </section>
 </nav>

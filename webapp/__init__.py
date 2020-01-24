@@ -85,9 +85,7 @@ def create_app():
     def process_login():
         form = LoginForm()
         if form.validate_on_submit():
-            print("data:", form.username.data)
             user = User.query.filter(User.username == form.username.data).first()
-            print("response", user)
             if user and user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
                 flash("You've been logged in!")
