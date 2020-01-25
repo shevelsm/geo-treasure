@@ -1,7 +1,7 @@
 import logging
 
 import folium
-from flask import Flask, flash, redirect, render_template, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import (
     LoginManager,
@@ -50,9 +50,10 @@ def create_app():
 
     @app.route("/dev")
     def dev():
+        radius = request.args.get("radius", 2)
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
-            cluster_list = Cluster.query.filter(Cluster.radius == 2.0)
+            cluster_list = Cluster.query.filter(Cluster.radius == radius)
             logging.debug(
                 "The number of clusters from the query = {}".format(
                     cluster_list.count()
@@ -64,7 +65,9 @@ def create_app():
                     popup=create_popup_for_marker(cluster.id),
                     icon=create_icon_for_marker(cluster.id),
                 ).add_to(folium_map)
-                add_on_click_handler_to_marker(folium_map, marker, cluster.id)
+                add_on_click_handler_to_marker(
+                    folium_map, marker, cluster.id, request.host_url
+                )
         return render_template("index.html", folium_map=folium_map._repr_html_())
 
     @app.route("/devajax/<int:cluster_id>")

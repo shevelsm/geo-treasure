@@ -62,13 +62,13 @@ def create_popup_for_marker(cluster_id):
     return Popup(html=text, max_width=400)
 
 
-def add_on_click_handler_to_marker(folium_map, marker, cluster_id):
+def add_on_click_handler_to_marker(folium_map, marker, cluster_id, host_url):
     my_js = """
             {0}.on('click', function(e) {{
-                parent.postMessage({1}, 'http://localhost:5000');
+                parent.postMessage({1}, "{2}");
             }});
             """.format(
-        marker.get_name(), cluster_id
+        marker.get_name(), cluster_id, host_url
     )
     e = Element(my_js)
     html = folium_map.get_root()

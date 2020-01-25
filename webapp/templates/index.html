@@ -4,6 +4,25 @@
 </article>
 <article class="result-content">
   <h2>Список интересных мест</h2>
+  <div class="dropdown p-2 text-center">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      id="dropdownMenuButton"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      Радиус кластера
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="/dev?radius=2">Радиус 2 км</a>
+      <a class="dropdown-item" href="/dev?radius=4">Радиус 4 км</a>
+      <a class="dropdown-item" href="/dev?radius=6">Радиус 6 км</a>
+      <a class="dropdown-item" href="/dev?radius=8">Радиус 8 км</a>
+      <a class="dropdown-item" href="/dev?radius=10">Радиус 10 км</a>
+    </div>
+  </div>
   <section id="results" class="result-list">
     <p class="alert alert-info">
       Выбери интересующий кластер на карте
