@@ -68,7 +68,9 @@ def create_app():
                 add_on_click_handler_to_marker(
                     folium_map, marker, cluster.id, request.host_url
                 )
-        return render_template("index.html", folium_map=folium_map._repr_html_())
+        return render_template(
+            "index.html", folium_map=folium_map._repr_html_(), radius=radius
+        )
 
     @app.route("/devajax/<int:cluster_id>")
     def devajax(cluster_id):
