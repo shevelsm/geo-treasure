@@ -1,11 +1,19 @@
 import logging
 
 import folium
-from flask import Flask, render_template
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 from flask_migrate import Migrate
 
-from webapp.model import Cluster, db, Point
+from webapp.forms import LoginForm, RegistrationForm
+from webapp.model import Cluster, db, Point, User
 from webapp.utils import (
     add_on_click_handler_to_marker,
     create_icon_for_marker,
@@ -13,7 +21,7 @@ from webapp.utils import (
 )
 
 
-logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 MAP_START_POSITION = [44.4, 38.75]
 
 
@@ -23,13 +31,18 @@ def create_app():
     db.init_app(app)
     Bootstrap(app)
     migrate = Migrate(app, db)
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_views = "login"
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
 
     @app.route("/")
     def index():
-        # in future get start_position as argument
-        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=9)
+        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
-            print(Point.__table__)
             points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
             for point in points_list:
                 folium.Marker([point[1], point[2]], popup=point[0]).add_to(folium_map)
@@ -37,9 +50,10 @@ def create_app():
 
     @app.route("/dev")
     def dev():
+        radius = request.args.get("radius", 2)
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
-            cluster_list = Cluster.query.filter(Cluster.radius == 2.0)
+            cluster_list = Cluster.query.filter(Cluster.radius == radius)
             logging.debug(
                 "The number of clusters from the query = {}".format(
                     cluster_list.count()
@@ -51,12 +65,73 @@ def create_app():
                     popup=create_popup_for_marker(cluster.id),
                     icon=create_icon_for_marker(cluster.id),
                 ).add_to(folium_map)
-                add_on_click_handler_to_marker(folium_map, marker, cluster.id)
+                add_on_click_handler_to_marker(
+                    folium_map, marker, cluster.id, request.host_url
+                )
         return render_template("index.html", folium_map=folium_map._repr_html_())
 
     @app.route("/devajax/<int:cluster_id>")
     def devajax(cluster_id):
         points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
         return render_template("cluster_points.html", points=points)
+
+    @app.route("/login")
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for("index"))
+        logging.debug("{} has logged in!".format(current_user))
+        title = "Authorization"
+        login_form = LoginForm()
+        return render_template("login.html", page_title=title, form=login_form)
+
+    @app.route("/process_login", methods=["POST"])
+    def process_login():
+        form = LoginForm()
+        if form.validate_on_submit():
+            user = User.query.filter(User.username == form.username.data).first()
+            if user and user.check_password(form.password.data):
+                login_user(user, remember=form.remember_me.data)
+                flash("You've been logged in!")
+                return redirect(url_for("index"))
+        flash("Incorrect name or password!")
+        return redirect(url_for("login"))
+
+    @app.route("/logout")
+    def logout():
+        logout_user()
+        flash("You've been logged out successfully!")
+        return redirect(url_for("index"))
+
+    @app.route("/register")
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for("index"))
+        title = "Registration"
+        registration_form = RegistrationForm()
+        return render_template(
+            "registration.html", page_title=title, form=registration_form
+        )
+
+    @app.route("/process_reg", methods=["POST"])
+    def process_reg():
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            new_user = User(
+                username=form.username.data, email=form.email.data, role="user"
+            )
+            new_user.set_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("login"))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(
+                        "The error in the field '{}': - {}".format(
+                            getattr(form, field).label.text, error
+                        )
+                    )
+        flash("Please, correct errors in the form!")
+        return redirect(url_for("user.register"))
 
     return app

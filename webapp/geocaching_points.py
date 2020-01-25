@@ -48,7 +48,7 @@ def get_geocaching_points():
 
         for point in points_table:
             id_point = point.find("input")["value"]
-            title_point = point.find("a").text
+            title_point = point.find("a").text.strip()
             logging.debug(f" Point id: {id_point}")
             logging.debug(f" Point title: {title_point}")
 
