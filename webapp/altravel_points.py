@@ -40,7 +40,7 @@ def get_pages_id(region_name):
 def get_page_info(page_id):
     url = f'https://altertravel.ru/view.php?id={page_id}'
     soup = get_soup(get_html(url))
-    title = soup.find('h1', class_='view').text
+    title = soup.find('h1', class_='view').text.strip()
     logging.debug(f'New point title: {title}')
     source = 'altertravel'
     try:
