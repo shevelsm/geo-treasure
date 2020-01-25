@@ -5,24 +5,30 @@
 ```
 .../geo-treasure
 ├── webapp/
-│   ├── app.py
+│   ├── __init__.py
 │   ├── config.py
+│   ├── forms.py
+│   ├── utils.py
 │   ├── model.py
 │   ├── altravel_points.py
 │   ├── geocaching_points.py
 │   ├── autotravel_points.py
 │   ├── templates/
-│   │   └── index.html
+│   │   ├── base.html
+│   │   ├── cluster_points.html
+│   │   ├── index.html
+│   │   ├── login.html
+│   │   ├── menu.html
+│   │   └── registration.html
 │   └── static/
 │       └── style.css
 ├── tests/
-│   ├── *.ipynb
-│   ├── *.sql
+│   ├── *.py
 │   └── *.py
 ├── venv/
 ├── requirements.txt
-├── calculate_clusters.py
-├── create_db.py
+├── create_admin.py
 ├── parse_points.py
+├── calculate_clusters.py
 └── README.md
 ```
