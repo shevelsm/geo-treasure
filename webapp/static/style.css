@@ -32,6 +32,7 @@ body {
   width: 30%;
   height: 100%;
   padding: 0.5rem;
+  vertical-align: top;
   box-sizing: border-box;
   overflow-y: auto;
   font-size: medium;
@@ -45,9 +46,25 @@ body {
   text-align: center;
 }
 
+#mainnav {
+  height: 5%;
+}
+
 .footer {
-  height: 10%;
-  padding: 9px;
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#githublink {
+  color: #fff;
+  text-decoration: none;
+}
+
+#githublink:hover {
+  color: #fff;
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 1342px) {

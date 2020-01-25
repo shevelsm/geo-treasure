@@ -20,16 +20,10 @@
     <main role="main" class="main-content">
       {% block content %}{% endblock %}
     </main>
-    <footer>
-      <section class="footer text-center bg-panels">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="" href="https://github.com/Shevelsm/geo-treasure"
-              >GitHub</a
-            >
-          </li>
-        </ul>
-      </section>
+    <footer class="footer bg-panels">
+      <a id="githublink" href="https://github.com/Shevelsm/geo-treasure"
+        >GitHub</a
+      >
     </footer>
     {{ bootstrap.load_js() }}{% block scripts %} {% endblock %}
   </body>
