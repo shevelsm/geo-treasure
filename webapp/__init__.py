@@ -41,15 +41,6 @@ def create_app():
 
     @app.route("/")
     def index():
-        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
-        with app.app_context():
-            points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
-            for point in points_list:
-                folium.Marker([point[1], point[2]], popup=point[0]).add_to(folium_map)
-        return render_template("index.html", folium_map=folium_map._repr_html_())
-
-    @app.route("/dev")
-    def dev():
         radius = request.args.get("radius", 2)
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
@@ -72,10 +63,19 @@ def create_app():
             "index.html", folium_map=folium_map._repr_html_(), radius=radius
         )
 
-    @app.route("/devajax/<int:cluster_id>")
-    def devajax(cluster_id):
+    @app.route("/clusterajax/<int:cluster_id>")
+    def clusterajax(cluster_id):
         points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
         return render_template("cluster_points.html", points=points)
+
+    @app.route("/dev")
+    def dev():
+        folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
+        with app.app_context():
+            points_list = Point.query.with_entities(Point.id, Point.lat, Point.long)
+            for point in points_list:
+                folium.Marker([point[1], point[2]], popup=point[0]).add_to(folium_map)
+        return render_template("index.html", folium_map=folium_map._repr_html_())
 
     @app.route("/login")
     def login():

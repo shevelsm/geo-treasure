@@ -37,7 +37,7 @@
     console.log("Page ready!");
     window.addEventListener("message", function(e) {
       $.ajax({
-        url: `/devajax/${e.data}`
+        url: `/clusterajax/${e.data}`
       }).done(function(data) {
         $("#results").html(data);
       });
