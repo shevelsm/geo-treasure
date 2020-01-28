@@ -5,11 +5,13 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.model import db, Point
 from webapp.utils import save_point_to_db
 
 
 def get_autotravel_points():
+    """
+    Parse and get intresting places from www.autotravel.ru and write them to the app db
+    """
     URL_BASE = "https://autotravel.ru"
     SEARCH_PAGE = "test.php"
     URL_SEARCH = urljoin(URL_BASE, SEARCH_PAGE)

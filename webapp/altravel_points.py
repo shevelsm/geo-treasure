@@ -3,7 +3,6 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.model import db, Point
 from webapp.utils import save_point_to_db
 
 

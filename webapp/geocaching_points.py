@@ -5,11 +5,13 @@ from os import environ
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.model import db, Point
 from webapp.utils import save_point_to_db
 
 
 def get_geocaching_points():
+    """
+    Parse and get intresting places from www.geocaching.su and write them to the app db
+    """
     zones = {
         "Адыгея респ.": {"country": 10, "area": 1},
         "Краснодарский край": {"country": 10, "area": 23},

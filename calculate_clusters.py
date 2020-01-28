@@ -46,66 +46,73 @@ def save_cluster_to_db(lat_cluster, long_cluster, radius_cluster, points_cluster
             db.session.commit()
 
 
-# Define epsilon list in kilometers, converted to radians for use by haversine
-MIN_RADIUS = 2  # [km]
-MAX_RADIUS = 10  # [km]
-RADIUS_STEP = 2  # [km]
-KMS_PER_RADIAN = 6371.0088  # [km]
-radius_list = [
-    radius for radius in range(MIN_RADIUS, MAX_RADIUS + RADIUS_STEP, RADIUS_STEP)
-]
-logger.debug("List of radius for clusters {}".format(radius_list))
-
-app = create_app()
-with app.app_context():
-    con = db.session.bind
-    all_points_sql = str(Point.query)
-    points_df = pd.read_sql(all_points_sql, con)
-    logger.debug(points_df.head())
-
-coords = points_df.as_matrix(columns=["point_lat", "point_long"])
-
-for radius in radius_list:
-    logger.info("Creating cluster with R = {} km has been started".format(radius))
-    epsilon = radius / KMS_PER_RADIAN
-    logger.debug("Epsilon for the current radius is equal {:.5f}".format(epsilon))
-    db_scan = DBSCAN(
-        eps=epsilon, min_samples=3, algorithm="auto", metric="haversine"
-    ).fit(np.radians(coords))
-    cluster_labels = db_scan.labels_
-
-    all_labels = set(cluster_labels)
-    all_labels.discard(-1)
-    num_clusters = len(all_labels)
-
-    logger.info(
-        "Clustered {:,} points down to {:,} clusters".format(
-            len(points_df), num_clusters
-        )
-    )
-
-    clusters = [coords[cluster_labels == num] for num in range(num_clusters)]
-    points_to_cluster = [
-        points_df.point_id[cluster_labels == num] for num in range(num_clusters)
+def calculate_clusters():
+    MIN_RADIUS = 2  # [km]
+    MAX_RADIUS = 10  # [km]
+    RADIUS_STEP = 2  # [km]
+    KMS_PER_RADIAN = 6371.0088  # [km]
+    radius_list = [
+        radius for radius in range(MIN_RADIUS, MAX_RADIUS + RADIUS_STEP, RADIUS_STEP)
     ]
+    logger.debug("List of radius for clusters {}".format(radius_list))
 
-    logger.info(
-        "Writing {} clusters for R = {} km to the database...".format(
-            num_clusters, radius
-        )
-    )
-    for num, cluster in enumerate(zip(clusters, points_to_cluster)):
-        points_coords, points_id_list = cluster
-        lat_cluster = MultiPoint(points_coords).centroid.x
-        long_cluster = MultiPoint(points_coords).centroid.y
-        logger.debug(
-            "Cluster #{} coords: {:.3f}, {:.3f}".format(num, lat_cluster, long_cluster)
-        )
-        logger.debug("Cluster #{} point list: {}".format(num, list(points_id_list)))
-        with app.app_context():
-            save_cluster_to_db(
-                lat_cluster=lat_cluster,
-                long_cluster=long_cluster,
-                radius_cluster=radius,
-                points_cluster=points_id_list,
+    app = create_app()
+    with app.app_context():
+        con = db.session.bind
+        all_points_sql = str(Point.query)
+        points_df = pd.read_sql(all_points_sql, con)
+        logger.debug(points_df.head())
+
+    coords = points_df.as_matrix(columns=["point_lat", "point_long"])
+
+    for radius in radius_list:
+        logger.info("Creating cluster with R = {} km has been started".format(radius))
+        # Define epsilon list in kilometers, converted to radians for use by haversine
+        epsilon = radius / KMS_PER_RADIAN
+        logger.debug("Epsilon for the current radius is equal {:.5f}".format(epsilon))
+        db_scan = DBSCAN(
+            eps=epsilon, min_samples=3, algorithm="auto", metric="haversine"
+        ).fit(np.radians(coords))
+        cluster_labels = db_scan.labels_
+
+        all_labels = set(cluster_labels)
+        all_labels.discard(-1)
+        num_clusters = len(all_labels)
+
+        logger.info(
+            "Clustered {:,} points down to {:,} clusters".format(
+                len(points_df), num_clusters
             )
+        )
+
+        clusters = [coords[cluster_labels == num] for num in range(num_clusters)]
+        points_to_cluster = [
+            points_df.point_id[cluster_labels == num] for num in range(num_clusters)
+        ]
+
+        logger.info(
+            "Writing {} clusters for R = {} km to the database...".format(
+                num_clusters, radius
+            )
+        )
+        for num, cluster in enumerate(zip(clusters, points_to_cluster)):
+            points_coords, points_id_list = cluster
+            lat_cluster = MultiPoint(points_coords).centroid.x
+            long_cluster = MultiPoint(points_coords).centroid.y
+            logger.debug(
+                "Cluster #{} coords: {:.3f}, {:.3f}".format(
+                    num, lat_cluster, long_cluster
+                )
+            )
+            logger.debug("Cluster #{} point list: {}".format(num, list(points_id_list)))
+            with app.app_context():
+                save_cluster_to_db(
+                    lat_cluster=lat_cluster,
+                    long_cluster=long_cluster,
+                    radius_cluster=radius,
+                    points_cluster=points_id_list,
+                )
+
+
+if __name__ == "__main__":
+    calculate_clusters()

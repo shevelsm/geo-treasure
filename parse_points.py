@@ -9,11 +9,11 @@ from webapp.geocaching_points import get_geocaching_points
 
 
 logging.basicConfig(
-    level=logging.INFO, 
-    filename="points_parsing.log", 
+    level=logging.INFO,
+    filename="points_parsing.log",
     format="%(asctime)s - %(message)s",
-    datefmt="%d-%m-%Y %H:%M:%S"
-    )
+    datefmt="%d-%m-%Y %H:%M:%S",
+)
 
 logger = logging.getLogger(__name__)
 formatter = logging.Formatter(

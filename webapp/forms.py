@@ -7,7 +7,9 @@ from webapp.model import User
 
 class LoginForm(FlaskForm):
     username = StringField(
-        "Имя пользователя", validators=[DataRequired()], render_kw={"class": "form-control"}
+        "Имя пользователя",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control"},
     )
     password = PasswordField(
         "Пароль", validators=[DataRequired()], render_kw={"class": "form-control"}
@@ -20,7 +22,9 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     username = StringField(
-        "Имя пользователя", validators=[DataRequired()], render_kw={"class": "form-control"}
+        "Имя пользователя",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control"},
     )
     email = StringField(
         "Email",
@@ -45,4 +49,6 @@ class RegistrationForm(FlaskForm):
     def validate_email(self, email):
         user_count = User.query.filter_by(email=email.data).count()
         if user_count > 0:
-            raise ValidationError("Пользователь с данным адрессом электронной почты уже существует!")
+            raise ValidationError(
+                "Пользователь с данным адрессом электронной почты уже существует!"
+            )
