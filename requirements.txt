@@ -1,5 +1,6 @@
 beautifulsoup4==4.8.1
 Bootstrap-Flask==1.2.0
+celery==4.4.0
 Flask==1.1.1
 Flask-Login==0.4.1
 Flask-Migrate==2.5.2

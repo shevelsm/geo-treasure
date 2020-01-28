@@ -58,6 +58,9 @@ def calculate_clusters():
 
     app = create_app()
     with app.app_context():
+        ClusterPoint.query.delete()
+        Cluster.query.delete()
+        db.session.commit()
         con = db.session.bind
         all_points_sql = str(Point.query)
         points_df = pd.read_sql(all_points_sql, con)
