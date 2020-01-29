@@ -5,7 +5,7 @@ import os
 from folium import Icon, Popup, Html
 from branca.element import Element
 
-from webapp.model import db, Point, ClusterPoint
+from webapp.model import db, Point
 
 
 def save_point_to_db(title, source, url, lat, long, info):
