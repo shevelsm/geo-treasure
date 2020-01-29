@@ -1,7 +1,8 @@
+import io
 import logging
 
 import folium
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, Response, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import (
     LoginManager,
@@ -11,12 +12,14 @@ from flask_login import (
     logout_user,
 )
 from flask_migrate import Migrate
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from webapp.forms import LoginForm, RegistrationForm
 from webapp.model import Cluster, db, Point, User
 from webapp.utils import (
     add_on_click_handler_to_marker,
     create_icon_for_marker,
+    create_pie_chart_figure,
     create_popup_for_marker,
 )
 
@@ -67,6 +70,19 @@ def create_app():
     def clusterajax(cluster_id):
         points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
         return render_template("cluster_points.html", points=points)
+
+    @app.route("/popup.png")
+    def popup_png():
+        geo_count = request.args.get("geo")
+        alter_count = request.args.get("alter")
+        auto_count = request.args.get("auto")
+        logging.debug(
+            "geo {}, alter {}, auto {}".format(geo_count, alter_count, auto_count)
+        )
+        fig = create_pie_chart_figure(geo_count, alter_count, auto_count)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype="image/png")
 
     @app.route("/dev")
     def dev():

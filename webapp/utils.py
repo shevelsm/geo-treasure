@@ -2,8 +2,9 @@ import json
 import logging
 import os
 
-from folium import Icon, Popup, Html
 from branca.element import Element
+from folium import Icon, Popup, Html
+import matplotlib.pyplot as plt
 
 from webapp.model import db, Point, ClusterPoint
 
@@ -55,11 +56,22 @@ def create_popup_for_marker(cluster_id):
     )
 
     text = Html(
-        f"altertravel - {alter}<br>" f"autotravel - {auto}<br>" f"geocaching - {geo}",
+        '<img src="/popup.png?geo={}&alter={}&auto={}" alt="popup_pie">'.format(
+            geo, alter, auto
+        ),
         script=True,
     )
 
     return Popup(html=text, max_width=400)
+
+
+def create_pie_chart_figure(geo_count, alter_count, auto_count):
+    LABELS = ("geocaching", "altertravel", "autotravel")
+    sizes = [geo_count, alter_count, auto_count]
+    COLORS = ["lightgreen", "gold", "lightskyblue"]
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=LABELS, colors=COLORS, shadow=True, startangle=140)
+    return fig
 
 
 def add_on_click_handler_to_marker(folium_map, marker, cluster_id, host_url):
