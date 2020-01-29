@@ -56,7 +56,6 @@ def create_app():
                 Cluster.id,
                 Cluster.lat,
                 Cluster.long,
-                Point.id,
                 Point.source,
             ).filter(Cluster.radius == radius)
             query_radius = query_radius.outerjoin(
@@ -67,7 +66,6 @@ def create_app():
                 Point,
                 Point.id == ClusterPoint.point_id,
             )
-            
             query_clusters = query_radius.group_by(Cluster.id)
             logging.debug(
                 "The number of clusters from the query = {}".format(

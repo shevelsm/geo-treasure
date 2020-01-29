@@ -36,7 +36,7 @@ def create_popup_and_icon(query_list):
         icon_color = "darkred"
 
     # generate popup
-    sources = [row[4] for row in query_list]
+    sources = [row[3] for row in query_list]
     alter, auto, geo = (
         sources.count("altertravel"),
         sources.count("autotravel"),
