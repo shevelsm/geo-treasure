@@ -20,11 +20,9 @@ def save_point_to_db(title, source, url, lat, long, info):
         db.session.commit()
 
 
-def create_icon_for_marker(cluster_id):
-    """ First implementation with usage database """
-    number_of_points = ClusterPoint.query.filter(
-        ClusterPoint.cluster_id == cluster_id
-    ).count()
+def create_popup_and_icon(query_list):
+    # generate icon
+    number_of_points = len(query_list)
 
     if number_of_points < 5:
         icon_color = "blue"
@@ -37,29 +35,23 @@ def create_icon_for_marker(cluster_id):
     else:
         icon_color = "darkred"
 
-    return Icon(color=icon_color, icon="gift")
-
-
-def create_popup_for_marker(cluster_id):
-    sources = {"altertravel": 0, "autotravel": 0, "geocaching": 0}
-
-    points = ClusterPoint.query.filter(ClusterPoint.cluster_id == cluster_id)
-    for point in points:
-        point_object = Point.query.filter(Point.id == point.point_id)
-        sources[point_object.first().source] += 1
-
+    # generate popup
+    sources = [row[4] for row in query_list]
     alter, auto, geo = (
-        sources["altertravel"],
-        sources["autotravel"],
-        sources["geocaching"],
+        sources.count("altertravel"),
+        sources.count("autotravel"),
+        sources.count("geocaching"),
     )
 
     text = Html(
-        f"altertravel - {alter}<br>" f"autotravel - {auto}<br>" f"geocaching - {geo}",
+        f"Количество интересных мест в точке:<br>"
+        f"c сайта altertravel - {alter} шт.<br>" 
+        f"с сайта autotravel - {auto} шт.<br>" 
+        f"с сайта geocaching - {geo} шт.",
         script=True,
     )
 
-    return Popup(html=text, max_width=400)
+    return Popup(html=text, max_width=400), Icon(color=icon_color, icon="gift")
 
 
 def add_on_click_handler_to_marker(folium_map, marker, cluster_id, host_url):

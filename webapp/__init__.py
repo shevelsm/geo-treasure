@@ -13,11 +13,10 @@ from flask_login import (
 from flask_migrate import Migrate
 
 from webapp.forms import LoginForm, RegistrationForm
-from webapp.model import Cluster, db, Point, User
+from webapp.model import Cluster, db, Point, User, ClusterPoint
 from webapp.utils import (
     add_on_click_handler_to_marker,
-    create_icon_for_marker,
-    create_popup_for_marker,
+    create_popup_and_icon,
 )
 
 
@@ -53,17 +52,36 @@ def create_app():
         radius = request.args.get("radius", 2)
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
-            cluster_list = Cluster.query.filter(Cluster.radius == radius)
+            query_radius = db.session.query(
+                Cluster.id,
+                Cluster.lat,
+                Cluster.long,
+                Point.id,
+                Point.source,
+            ).filter(Cluster.radius == radius)
+            query_radius = query_radius.outerjoin(
+                ClusterPoint,
+                ClusterPoint.cluster_id == Cluster.id,
+            )
+            query_radius = query_radius.outerjoin(
+                Point,
+                Point.id == ClusterPoint.point_id,
+            )
+            
+            query_clusters = query_radius.group_by(Cluster.id)
             logging.debug(
                 "The number of clusters from the query = {}".format(
-                    cluster_list.count()
+                    query_clusters.count()
                 )
             )
-            for cluster in cluster_list:
+            for cluster in query_clusters:
+                popup, icon = create_popup_and_icon(
+                    [row for row in query_radius if row[0] == cluster.id],
+                )
                 marker = folium.Marker(
                     [cluster.lat, cluster.long],
-                    popup=create_popup_for_marker(cluster.id),
-                    icon=create_icon_for_marker(cluster.id),
+                    popup=popup,
+                    icon=icon,
                 ).add_to(folium_map)
                 add_on_click_handler_to_marker(
                     folium_map, marker, cluster.id, request.host_url
