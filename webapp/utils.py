@@ -30,7 +30,7 @@ def create_icon_for_marker(cluster_id):
     if number_of_points < 5:
         icon_color = "blue"
     elif number_of_points < 7:
-        icon_color = "pink"
+        icon_color = "pinkInstall"
     elif number_of_points < 14:
         icon_color = "purple"
     elif number_of_points < 36:
@@ -69,8 +69,9 @@ def create_pie_chart_figure(geo_count, alter_count, auto_count):
     LABELS = ("geocaching", "altertravel", "autotravel")
     sizes = [geo_count, alter_count, auto_count]
     COLORS = ["lightgreen", "gold", "lightskyblue"]
-    fig, ax = plt.subplots()
-    ax.pie(sizes, labels=LABELS, colors=COLORS, shadow=True, startangle=140)
+    fig, ax = plt.subplots(figsize=(0.9,0.9))
+    ax.pie(sizes, colors=COLORS, shadow=True, startangle=140)
+    ax.legend(labels=LABELS, fontsize="xx-small", loc=6)
     return fig
 
 
