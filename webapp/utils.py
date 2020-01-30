@@ -6,7 +6,7 @@ from branca.element import Element
 from folium import Icon, Popup, Html
 import matplotlib.pyplot as plt
 
-from webapp.model import db, Point, ClusterPoint
+from webapp.model import db, Point
 
 
 def save_point_to_db(title, source, url, lat, long, info):
@@ -21,11 +21,9 @@ def save_point_to_db(title, source, url, lat, long, info):
         db.session.commit()
 
 
-def create_icon_for_marker(cluster_id):
-    """ First implementation with usage database """
-    number_of_points = ClusterPoint.query.filter(
-        ClusterPoint.cluster_id == cluster_id
-    ).count()
+def create_popup_and_icon(query_list):
+    # generate icon
+    number_of_points = len(query_list)
 
     if number_of_points < 5:
         icon_color = "blue"
@@ -38,21 +36,12 @@ def create_icon_for_marker(cluster_id):
     else:
         icon_color = "darkred"
 
-    return Icon(color=icon_color, icon="gift")
-
-
-def create_popup_for_marker(cluster_id):
-    sources = {"altertravel": 0, "autotravel": 0, "geocaching": 0}
-
-    points = ClusterPoint.query.filter(ClusterPoint.cluster_id == cluster_id)
-    for point in points:
-        point_object = Point.query.filter(Point.id == point.point_id)
-        sources[point_object.first().source] += 1
-
+    # generate popup
+    sources = [row[3] for row in query_list]
     alter, auto, geo = (
-        sources["altertravel"],
-        sources["autotravel"],
-        sources["geocaching"],
+        sources.count("altertravel"),
+        sources.count("autotravel"),
+        sources.count("geocaching"),
     )
 
     text = Html(
@@ -62,7 +51,7 @@ def create_popup_for_marker(cluster_id):
         script=True,
     )
 
-    return Popup(html=text, max_width=400)
+    return Popup(html=text, max_width=400), Icon(color=icon_color, icon="gift")
 
 
 def create_pie_chart_figure(geo_count, alter_count, auto_count):
