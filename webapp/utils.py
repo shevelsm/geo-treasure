@@ -21,16 +21,16 @@ def save_point_to_db(title, source, url, lat, long, info):
         db.session.commit()
 
 
-def create_popup_and_icon(query_list):
+def create_popup_and_icon(query_list, host_url):
     # generate icon
     number_of_points = len(query_list)
 
     if number_of_points < 5:
         icon_color = "blue"
     elif number_of_points < 7:
-        icon_color = "pinkInstall"
+        icon_color = "green"
     elif number_of_points < 14:
-        icon_color = "purple"
+        icon_color = "orange"
     elif number_of_points < 36:
         icon_color = "red"
     else:
@@ -45,8 +45,8 @@ def create_popup_and_icon(query_list):
     )
 
     text = Html(
-        '<img src="/popup.png?geo={}&alter={}&auto={}" alt="popup_pie">'.format(
-            geo, alter, auto
+        '<img src="{}popup.png?geo={}&alter={}&auto={}" alt="popup_pie">'.format(
+            host_url, geo, alter, auto
         ),
         script=True,
     )
@@ -58,9 +58,9 @@ def create_pie_chart_figure(geo_count, alter_count, auto_count):
     LABELS = ("geocaching", "altertravel", "autotravel")
     sizes = [geo_count, alter_count, auto_count]
     COLORS = ["lightgreen", "gold", "lightskyblue"]
-    fig, ax = plt.subplots(figsize=(0.9,0.9))
+    fig, ax = plt.subplots(figsize=(0.9, 0.9))
     ax.pie(sizes, colors=COLORS, shadow=True, startangle=140)
-    ax.legend(labels=LABELS, fontsize="xx-small", loc=6)
+    # ax.legend(labels=LABELS, fontsize="xx-small", loc=6)
     return fig
 
 

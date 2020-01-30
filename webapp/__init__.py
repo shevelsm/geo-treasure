@@ -69,6 +69,7 @@ def create_app():
             for cluster in query_clusters:
                 popup, icon = create_popup_and_icon(
                     [row for row in query_radius if row[0] == cluster.id],
+                    request.host_url
                 )
                 marker = folium.Marker(
                     [cluster.lat, cluster.long],
