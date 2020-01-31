@@ -1,0 +1,98 @@
+html,
+body {
+  background: #f1f1f1;
+  color: #333333;
+  height: 100%;
+}
+
+.bg-panels {
+  background-color: indigo;
+}
+.main-content {
+  font-size: 0;
+  height: 90%;
+}
+.map-content {
+  display: inline-block;
+  width: 70%;
+  height: 100%;
+}
+
+.map-content > div {
+  height: 100%;
+}
+
+.map-content > div > div {
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+.result-content {
+  display: inline-block;
+  width: 30%;
+  height: 100%;
+  padding: 0.5rem;
+  vertical-align: top;
+  box-sizing: border-box;
+  overflow-y: auto;
+  font-size: medium;
+}
+
+.result-content > h2 {
+  text-align: center;
+}
+
+.result-list > p {
+  text-align: center;
+}
+
+#color_range {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mainnav {
+  height: 5%;
+}
+
+.footer {
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#githublink {
+  color: #fff;
+  text-decoration: none;
+}
+
+#githublink:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1342px) {
+  .map-content {
+    display: block;
+    width: 100%;
+  }
+  .result-content {
+    margin: 10px;
+    height: 510px;
+    width: 100%;
+    display: block;
+  }
+  .footer {
+    visibility: hidden;
+  }
+}
+
+.login {
+  font-size: medium;
+}
+
+form div {
+  font-size: medium;
+}

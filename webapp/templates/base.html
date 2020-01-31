@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    {% block styles %} {{ bootstrap.load_css() }} {% endblock %}
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+    {% if page_title %}
+    <title>{{ page_title }}</title>
+    {% else %}
+    <title>geo-treasure</title>
+    {% endif %}
+  </head>
+  <body>
+    {% include 'menu.html' %}
+    <main role="main" class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="footer bg-panels">
+      <a id="githublink" href="https://github.com/Shevelsm/geo-treasure"
+        >GitHub</a
+      >
+    </footer>
+    {{ bootstrap.load_js() }}{% block scripts %} {% endblock %}
+  </body>
+</html>

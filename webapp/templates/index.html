@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block content %}
+<article id="map" class="map-content">
+  {% block map %} {{ folium_map|safe }} {% endblock %}
+</article>
+<article class="result-content">
+  <h2>Кол-во привлекательных мест</h2>
+  <img id="color_range" src="/static/img/color_range.png" />
+  <div class="dropdown p-2 text-center">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      id="dropdownMenuButton"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      Радиус кластера - {{ radius }} км
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="/?radius=2">2 км</a>
+      <a class="dropdown-item" href="/?radius=4">4 км</a>
+      <a class="dropdown-item" href="/?radius=6">6 км</a>
+      <a class="dropdown-item" href="/?radius=8">8 км</a>
+      <a class="dropdown-item" href="/?radius=10">10 км</a>
+    </div>
+  </div>
+  <section id="results" class="result-list">
+    <p class="alert alert-info">
+      Выбери интересующий кластер на карте
+    </p>
+    <!-- Points list for the clicked cluster is inserted here -->
+  </section>
+</article>
+{% endblock %} {% block scripts %}
+<!-- EventListener when message is recieved from Marker on click event -->
+<script>
+  $(document).ready(function() {
+    console.log("Page ready!");
+    window.addEventListener("message", function(e) {
+      $.ajax({
+        url: `/clusterajax/${e.data}`
+      }).done(function(data) {
+        $("#results").html(data);
+      });
+    });
+  });
+</script>
+{% endblock %}
