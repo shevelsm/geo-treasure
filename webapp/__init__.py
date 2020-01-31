@@ -1,7 +1,8 @@
+import io
 import logging
 
 import folium
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, Response, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import (
     LoginManager,
@@ -11,11 +12,13 @@ from flask_login import (
     logout_user,
 )
 from flask_migrate import Migrate
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from webapp.forms import LoginForm, RegistrationForm
 from webapp.model import Cluster, db, Point, User, ClusterPoint
 from webapp.utils import (
     add_on_click_handler_to_marker,
+    create_pie_chart_figure,
     create_popup_and_icon,
 )
 
@@ -44,18 +47,13 @@ def create_app():
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
             query_radius = db.session.query(
-                Cluster.id,
-                Cluster.lat,
-                Cluster.long,
-                Point.source,
+                Cluster.id, Cluster.lat, Cluster.long, Point.source,
             ).filter(Cluster.radius == radius)
             query_radius = query_radius.outerjoin(
-                ClusterPoint,
-                ClusterPoint.cluster_id == Cluster.id,
+                ClusterPoint, ClusterPoint.cluster_id == Cluster.id,
             )
             query_radius = query_radius.outerjoin(
-                Point,
-                Point.id == ClusterPoint.point_id,
+                Point, Point.id == ClusterPoint.point_id,
             )
             query_clusters = query_radius.group_by(Cluster.id)
             logging.debug(
@@ -66,11 +64,10 @@ def create_app():
             for cluster in query_clusters:
                 popup, icon = create_popup_and_icon(
                     [row for row in query_radius if row[0] == cluster.id],
+                    request.host_url,
                 )
                 marker = folium.Marker(
-                    [cluster.lat, cluster.long],
-                    popup=popup,
-                    icon=icon,
+                    [cluster.lat, cluster.long], popup=popup, icon=icon,
                 ).add_to(folium_map)
                 add_on_click_handler_to_marker(
                     folium_map, marker, cluster.id, request.host_url
@@ -83,6 +80,19 @@ def create_app():
     def clusterajax(cluster_id):
         points = Point.query.filter(Point.clusters.any(cluster_id=cluster_id))
         return render_template("cluster_points.html", points=points)
+
+    @app.route("/popup.png")
+    def popup_png():
+        geo_count = request.args.get("geo")
+        alter_count = request.args.get("alter")
+        auto_count = request.args.get("auto")
+        logging.debug(
+            "geo {}, alter {}, auto {}".format(geo_count, alter_count, auto_count)
+        )
+        fig = create_pie_chart_figure(geo_count, alter_count, auto_count)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype="image/png")
 
     @app.route("/dev")
     def dev():

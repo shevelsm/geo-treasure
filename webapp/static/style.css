@@ -46,6 +46,12 @@ body {
   text-align: center;
 }
 
+#color_range {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #mainnav {
   height: 5%;
 }
