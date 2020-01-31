@@ -27,14 +27,14 @@ def create_popup_and_icon(query_list, host_url):
 
     if number_of_points < 5:
         icon_color = "blue"
-    elif number_of_points < 7:
+    elif number_of_points < 10:
         icon_color = "green"
-    elif number_of_points < 14:
+    elif number_of_points < 20:
+        icon_color = "yellow"
+    elif number_of_points < 30:
         icon_color = "orange"
-    elif number_of_points < 36:
-        icon_color = "red"
     else:
-        icon_color = "darkred"
+        icon_color = "red"
 
     # generate popup
     sources = [row[3] for row in query_list]
@@ -51,16 +51,22 @@ def create_popup_and_icon(query_list, host_url):
         script=True,
     )
 
-    return Popup(html=text, max_width=400), Icon(color=icon_color, icon="gift")
+    return Popup(html=text), Icon(color=icon_color, icon="info-sign")
 
 
 def create_pie_chart_figure(geo_count, alter_count, auto_count):
     LABELS = ("geocaching", "altertravel", "autotravel")
     sizes = [geo_count, alter_count, auto_count]
     COLORS = ["lightgreen", "gold", "lightskyblue"]
-    fig, ax = plt.subplots(figsize=(0.9, 0.9))
+    fig, ax = plt.subplots(figsize=(1.5, 0.8))
     ax.pie(sizes, colors=COLORS, shadow=True, startangle=140)
-    # ax.legend(labels=LABELS, fontsize="xx-small", loc=6)
+    ax.legend(
+        labels=LABELS,
+        fontsize="xx-small",
+        loc="center right",
+        bbox_to_anchor=(2.25, 0.5),
+    )
+    plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)
     return fig
 
 

@@ -47,18 +47,13 @@ def create_app():
         folium_map = folium.Map(location=MAP_START_POSITION, zoom_start=8)
         with app.app_context():
             query_radius = db.session.query(
-                Cluster.id,
-                Cluster.lat,
-                Cluster.long,
-                Point.source,
+                Cluster.id, Cluster.lat, Cluster.long, Point.source,
             ).filter(Cluster.radius == radius)
             query_radius = query_radius.outerjoin(
-                ClusterPoint,
-                ClusterPoint.cluster_id == Cluster.id,
+                ClusterPoint, ClusterPoint.cluster_id == Cluster.id,
             )
             query_radius = query_radius.outerjoin(
-                Point,
-                Point.id == ClusterPoint.point_id,
+                Point, Point.id == ClusterPoint.point_id,
             )
             query_clusters = query_radius.group_by(Cluster.id)
             logging.debug(
@@ -69,12 +64,10 @@ def create_app():
             for cluster in query_clusters:
                 popup, icon = create_popup_and_icon(
                     [row for row in query_radius if row[0] == cluster.id],
-                    request.host_url
+                    request.host_url,
                 )
                 marker = folium.Marker(
-                    [cluster.lat, cluster.long],
-                    popup=popup,
-                    icon=icon,
+                    [cluster.lat, cluster.long], popup=popup, icon=icon,
                 ).add_to(folium_map)
                 add_on_click_handler_to_marker(
                     folium_map, marker, cluster.id, request.host_url
