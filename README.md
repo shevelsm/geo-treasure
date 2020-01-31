@@ -1,5 +1,9 @@
 # geo-treasure
 
+Simple agreagator of interesting places
+Collect places in clusters
+Krasnodar region only...
+
 ## Project layout (in work)
 
 ```
@@ -21,10 +25,10 @@
 │   │   ├── menu.html
 │   │   └── registration.html
 │   └── static/
+│       ├── img/
+│       │   ├──  color_range.png
 │       └── style.css
-├── tests/
-│   ├── *.py
-│   └── *.py
+├── test/
 ├── venv/
 ├── requirements.txt
 ├── create_admin.py
