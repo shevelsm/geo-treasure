@@ -1,10 +1,6 @@
 # geo-treasure
 
-<<<<<<< HEAD
 Simple aggreagator of interesting places
-=======
-Simple agreagator of interesting places
->>>>>>> 81e597ce75327278271472a800684bc1876bd050
 Collect places in clusters
 Krasnodar region only...
 
