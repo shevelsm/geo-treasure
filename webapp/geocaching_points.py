@@ -30,8 +30,12 @@ def get_geocaching_points():
         "longterm": 1,
     }
 
-    ses = requests.Session()
-    ses.post(URL, data=form_login)
+    try:
+        ses = requests.Session()
+        ses.post(URL, data=form_login)
+    except (requests.exceptions.ConnectionError, ValueError):
+        logging.error("Connection error with {}".format(URL))
+        return False
 
     for zone_data in zones.values():
         form_data = {
