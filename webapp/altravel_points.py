@@ -43,11 +43,7 @@ def get_page_info(page_id):
     url = f"https://altertravel.ru/view.php?id={page_id}"
     soup = get_soup(get_html(url))
     title = soup.find("h1", class_="view").text.strip()
-<<<<<<< HEAD
     logging.debug(f"New point title: {title}")
-=======
-    logging.error(f"New point title: {title}")
->>>>>>> 60556d41f3f19f6f8e229a55898d4bb56cf88f25
     source = "altertravel"
     try:
         info = soup.find("div", class_="col-sm-4").find("p").text.strip()
@@ -74,8 +70,4 @@ def get_altravel_points():
         for page_id in pages_id:
             save_point_to_db(*get_page_info(page_id))
     except (requests.exceptions.ConnectionError):
-<<<<<<< HEAD
         logging.error("Connection error with {}".format(URL))
-=======
-        logging.info("Connection error with {}".format(URL))
->>>>>>> 60556d41f3f19f6f8e229a55898d4bb56cf88f25
