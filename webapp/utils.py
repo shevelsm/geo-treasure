@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from subprocess import check_output
 
 from branca.element import Element
 from folium import Icon, Popup, Html
@@ -90,3 +91,8 @@ def markers_generator():
     with open(path_to_file, "r", encoding="utf-8") as file:
         markers_data = json.loads(file.read())
     return markers_data
+
+
+def get_server_url():
+    ips = check_output(["hostname", "--all-ip-addresses"])
+    return "http://{}/".format(str(ips.split()[0])[2:-1])
