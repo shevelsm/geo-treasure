@@ -4,10 +4,10 @@ from celery import Celery
 from celery.schedules import crontab
 
 from calculate_clusters import calculate_clusters
-from webapp import create_app
-from webapp.altravel_points import get_altravel_points
-from webapp.autotravel_points import get_autotravel_points
-from webapp.geocaching_points import get_geocaching_points
+from geotreasure import create_app
+from geotreasure.altravel_points import get_altravel_points
+from geotreasure.autotravel_points import get_autotravel_points
+from geotreasure.geocaching_points import get_geocaching_points
 
 
 flask_app = create_app()
