@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 from shapely.geometry import MultiPoint
 
-from webapp import create_app
-from webapp.model import Cluster, ClusterPoint, db, Point
+from geotreasure import create_app
+from geotreasure.model import Cluster, ClusterPoint, db, Point
 
 
 logging.basicConfig(

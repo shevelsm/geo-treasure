@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.utils import save_point_to_db
+from geotreasure.utils import save_point_to_db
 
 
 def get_autotravel_points():

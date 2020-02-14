@@ -14,9 +14,9 @@ from flask_login import (
 from flask_migrate import Migrate
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-from webapp.forms import LoginForm, RegistrationForm
-from webapp.model import Cluster, db, Point, User, ClusterPoint
-from webapp.utils import (
+from geotreasure.forms import LoginForm, RegistrationForm
+from geotreasure.model import Cluster, db, Point, User, ClusterPoint
+from geotreasure.utils import (
     add_on_click_handler_to_marker,
     create_pie_chart_figure,
     create_popup_and_icon,
