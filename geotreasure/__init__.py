@@ -14,12 +14,13 @@ from flask_login import (
 from flask_migrate import Migrate
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-from webapp.forms import LoginForm, RegistrationForm
-from webapp.model import Cluster, db, Point, User, ClusterPoint
-from webapp.utils import (
+from geotreasure.forms import LoginForm, RegistrationForm
+from geotreasure.model import Cluster, db, Point, User, ClusterPoint
+from geotreasure.utils import (
     add_on_click_handler_to_marker,
     create_pie_chart_figure,
     create_popup_and_icon,
+    get_server_url,
 )
 
 
@@ -36,6 +37,11 @@ def create_app():
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_views = "login"
+
+    if app.config["ENV"] == "production":
+        HOST_URL = get_server_url()
+    else:
+        HOST_URL = "http://localhost:5000/"
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -63,15 +69,12 @@ def create_app():
             )
             for cluster in query_clusters:
                 popup, icon = create_popup_and_icon(
-                    [row for row in query_radius if row[0] == cluster.id],
-                    request.host_url,
+                    [row for row in query_radius if row[0] == cluster.id], HOST_URL,
                 )
                 marker = folium.Marker(
                     [cluster.lat, cluster.long], popup=popup, icon=icon,
                 ).add_to(folium_map)
-                add_on_click_handler_to_marker(
-                    folium_map, marker, cluster.id, request.host_url
-                )
+                add_on_click_handler_to_marker(folium_map, marker, cluster.id, HOST_URL)
         return render_template(
             "index.html", folium_map=folium_map._repr_html_(), radius=radius
         )

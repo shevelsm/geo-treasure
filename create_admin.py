@@ -2,8 +2,8 @@ from getpass import getpass
 import logging
 import sys
 
-from webapp import create_app
-from webapp.model import db, User
+from geotreasure import create_app
+from geotreasure.model import db, User
 
 app = create_app()
 with app.app_context():

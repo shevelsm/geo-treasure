@@ -5,7 +5,7 @@ from os import environ
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.utils import save_point_to_db
+from geotreasure.utils import save_point_to_db
 
 
 def get_geocaching_points():
@@ -30,8 +30,12 @@ def get_geocaching_points():
         "longterm": 1,
     }
 
-    ses = requests.Session()
-    ses.post(URL, data=form_login)
+    try:
+        ses = requests.Session()
+        ses.post(URL, data=form_login)
+    except (requests.exceptions.ConnectionError, ValueError):
+        logging.error("Connection error with {}".format(URL))
+        return False
 
     for zone_data in zones.values():
         form_data = {

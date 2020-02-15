@@ -1,12 +1,13 @@
 import json
 import logging
 import os
+from subprocess import check_output
 
 from branca.element import Element
 from folium import Icon, Popup, Html
 import matplotlib.pyplot as plt
 
-from webapp.model import db, Point
+from geotreasure.model import db, Point
 
 
 def save_point_to_db(title, source, url, lat, long, info):
@@ -86,7 +87,12 @@ def add_on_click_handler_to_marker(folium_map, marker, cluster_id, host_url):
 
 def markers_generator():
     """ range - searching radius for places """
-    path_to_file = os.path.join("webapp", "data", "ready50dots.json")
+    path_to_file = os.path.join("geotreasure", "data", "ready50dots.json")
     with open(path_to_file, "r", encoding="utf-8") as file:
         markers_data = json.loads(file.read())
     return markers_data
+
+
+def get_server_url():
+    ips = check_output(["hostname", "--all-ip-addresses"])
+    return "http://{}/".format(str(ips.split()[0])[2:-1])

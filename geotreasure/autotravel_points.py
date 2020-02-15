@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-from webapp.utils import save_point_to_db
+from geotreasure.utils import save_point_to_db
 
 
 def get_autotravel_points():
@@ -34,7 +34,13 @@ def get_autotravel_points():
         "mark": 1,
         "ksubmit": "Найти",
     }
-    response = ses.get(URL_SEARCH, params=params)
+
+    try:
+        response = ses.get(URL_SEARCH, params=params)
+    except (requests.exceptions.ConnectionError, ValueError):
+        logging.error("Connection error with {}".format(URL_BASE))
+        return False
+
     soup = BeautifulSoup(response.text, "html.parser")
     points_table = soup.find("table", class_="ttb tdc").find_all("tr")
 
@@ -57,7 +63,6 @@ def get_autotravel_points():
         info_point = soup.find("p").text
         logging.debug(f"Point info:\n{info_point}")
 
-        save_point_to_db(title_point, SOURCE,
-                         url_point, lat_point,
-                         long_point, info_point
+        save_point_to_db(
+            title_point, SOURCE, url_point, lat_point, long_point, info_point
         )
