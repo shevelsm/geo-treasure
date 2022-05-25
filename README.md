@@ -21,7 +21,7 @@
     $ cd geo-treasure
 ```
 
-Для корректной работы проекта рекомендуется создавать виртуальное окружение и активировать его.
+Для корректной работы проекта рекомендуется создавать виртуальное окружение (Python 3.6) и активировать его.
 
 Для Linux/Mac:
 
@@ -33,14 +33,34 @@
 Для Windows:
 
 ```cmd
-    $ py -3 -m venv venv
-    $ venv\Scripts\activate.bat
+    py -3 -m venv venv
+    venv\Scripts\activate.bat
+```
+
+Для установки необходимого окружения так же удобно использовать менеджер `conda` ([установка](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html))
+
+```bash
+    conda create python=3.6 -n geo-treasure
 ```
 
 Далее необходимо установить все требуемые зависимости для работы проекта с помощью пакетного менеджера pip.
 
 ```bash
     pip install -r ./requirements.txt
+```
+
+Так как название веб приложения отличается от дефолтного, нужно определить переменную окружения  `FLASK_APP`.
+
+Для Linux/Mac:
+
+```bash
+    $ export FLASK_APP=geotreasure/__init__.py
+```
+
+Для Windows:
+
+```cmd
+    set FLASK_APP=geotreasure/__init__.py
 ```
 
 После установки требуется инициализирвать базу данных (SQLite) и применить миграции, используя flask.
