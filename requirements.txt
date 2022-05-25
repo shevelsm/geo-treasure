@@ -12,3 +12,5 @@ numpy==1.17.4
 pandas==0.25.3
 Shapely==1.6.4.post2
 sklearn==0.0
+werkzeug==0.16.1
+wtforms[email]
